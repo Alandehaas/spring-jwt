@@ -1,12 +1,12 @@
 package com.inholland.java.advanced.models;
 
 import com.inholland.java.advanced.enums.Role;
-import com.inholland.java.advanced.requests.LoginRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
     @Id
     @GeneratedValue
     private long id;

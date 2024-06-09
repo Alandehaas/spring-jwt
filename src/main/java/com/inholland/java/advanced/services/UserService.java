@@ -6,6 +6,8 @@ import com.inholland.java.advanced.models.User;
 import com.inholland.java.advanced.repositories.UserRepository;
 import com.inholland.java.advanced.requests.LoginRequest;
 import com.inholland.java.advanced.responses.LoginResponse;
+import com.inholland.java.advanced.utils.Json;
+import com.inholland.java.advanced.utils.Serialization;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
@@ -57,5 +59,19 @@ public class UserService {
         user.setPassword(bCryptPasswordEncoder.encode(loginRequest.getPassword()));
         user.setRoles(List.of(Role.ROLE_USER));
         return user;
+    }
+
+    public List<User> saveToFiles() {
+        try {
+            //User class implements Serializable
+            new Serialization<User>().saveToFile(userRepository.findAll(), "users.ser");
+            List<User> serializableUsers = new Serialization<User>().readFromFile("users.ser");
+
+            new Json<>(User.class).write("users.json", userRepository.findAll());
+            return new Json<>(User.class).read("users.json");
+
+        } catch (Exception e) {
+            throw new RuntimeException("Could not save users to file");
+        }
     }
 }
